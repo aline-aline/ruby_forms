@@ -55,8 +55,8 @@ RSpec.describe "Api::V1::Forms", type: :request do
         end
 
         it "returned associated questions" do
-          expect(json['questions'].0).to eql(JSON.parse(@question1.to_json))
-          expect(json['questions'].1).to  eql(JSON.parse(@question2.to_json))
+          expect(json['questions'][0]).to eql(JSON.parse(@question1.to_json))
+          expect(json['questions'][1]).to eql(JSON.parse(@question2.to_json))
         end
       end
 
@@ -81,7 +81,7 @@ RSpec.describe "Api::V1::Forms", type: :request do
   end
 
   describe "POST /forms" do
-    
+
     context "With Invalid authentication headers" do
       it_behaves_like :deny_without_authorization, :post, "/api/v1/forms"
     end
@@ -113,22 +113,11 @@ RSpec.describe "Api::V1::Forms", type: :request do
           end
         end
       end
-
-      context "And with invalid params" do
-        before do
-          @other_user = create(:user)
-          post "/api/v1/forms", params: {form: {}}, headers: header_with_authentication(@user)
-        end
-
-        it "returns 400" do
-          expect_status(400)
-        end
-      end
     end
   end
 
   describe "PUT /forms/:friendly_id" do
-    
+
     context "With Invalid authentication headers" do
       it_behaves_like :deny_without_authorization, :put, "/api/v1/forms/questionary"
     end
@@ -184,7 +173,7 @@ RSpec.describe "Api::V1::Forms", type: :request do
         end
 
         it "returns 404" do
-          delete "/api/v1/forms/#{FFaker::Lorem.word}", params: {form: @form_attributes}, headers: header_with_authentication(@user)
+          put "/api/v1/forms/#{FFaker::Lorem.word}", params: {form: @form_attributes}, headers: header_with_authentication(@user)
           expect_status(404)
         end
       end
@@ -199,7 +188,6 @@ RSpec.describe "Api::V1::Forms", type: :request do
     context "With Invalid authentication headers" do
       it_behaves_like :deny_without_authorization, :delete, "/api/v1/forms/questionary"
     end
-
 
     context "With valid authentication headers" do
 
@@ -281,4 +269,5 @@ RSpec.describe "Api::V1::Forms", type: :request do
       end
     end
   end
+
 end
